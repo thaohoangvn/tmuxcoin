@@ -1,5 +1,4 @@
 #!/bin/sh
-echo "Thao Hoang"
 source $HOME/.icos.sh
 P_TEXT=""
 for ico in $ICOS 
