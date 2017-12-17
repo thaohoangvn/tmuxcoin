@@ -1,11 +1,18 @@
 #!/bin/sh
-source $HOME/.icos.sh
-P_TEXT=""
-for ico in $ICOS 
-do
-  BF_URL=https://api.bitfinex.com/v1/pubticker/${ico}usd
-  TICKER_DATA=`curl --request GET --url $BF_URL | jq '.mid'`
-  P_TEXT="$ico: $TICKER_DATA | $P_TEXT"
-done
 
-echo $P_TEXT
+source $HOME/.icos.sh
+
+get_coin() {
+  TICKER_DATA=`curl --request GET --url https://api.bitfinex.com/v1/pubticker/${1}usd | jq '.mid'`
+  echo -n " $1: $TICKER_DATA |" >> p.dat
+}
+
+get_coins() {
+  rm p.dat
+  for ico in $ICOS; do
+    get_coin $ico &
+  done; wait
+  cat p.dat; return
+}
+
+get_coins
